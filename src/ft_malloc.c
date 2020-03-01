@@ -15,7 +15,17 @@
 pthread_mutex_t g_mutex_malloc = PTHREAD_MUTEX_INITIALIZER;
 t_page			*g_page_zones[PAGE_ZONE_NUM] = {NULL};
 
-enum page_zone get_page_zone(size_t size)
+int create_page_zone(enum page_zone)
+{
+	switch (page_zone)
+	{
+		case TINY:
+		case SMALL:
+		case LARGE:
+	}
+}
+
+enum page_zone get_page_zone_enum(size_t size)
 {
 	if (MAX_BLOCK_SIZE_TINY >= size)
 		return TINY;
@@ -27,11 +37,16 @@ enum page_zone get_page_zone(size_t size)
 
 void	*ft_malloc(size_t size)
 {
-	t_block *new_block_ptr;
-	enum page_zone page_zone = get_page_zone(size);
+	t_block *block_ptr;
+	enum page_zone page_zone = get_page_zone_enum(size);
 
+	if (!g_page_zones[page_zone])
+	{
+		create_page_zone(page_zone);
+	}
 	while (g_page_zones[page_zone])
 	{
+		//block_ptr = get_ptr_to_block();
 		g_page_zones[page_zone] = g_page_zones[page_zone]->next;
 	}
 	return NULL; //temp
