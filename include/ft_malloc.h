@@ -17,11 +17,14 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#define TINY_ZONE_SIZE	(4 * getpagesize())
-#define SMALL_ZONE_SIZE	(4 * TINY_ZONE_SIZE)
-#define MAX_BLOCK_SIZE_TINY		128
-#define MAX_BLOCK_SIZE_SMALL	1024
-#define PAGE_ZONE_NUM	3
+#define PAGE_ZONE_NUM				3
+#define BLOCK_SIZE_TINY				128
+#define BLOCK_SIZE_SMALL			1024
+#define SIZE_OF_PAGE_HEADER 		sizeof(t_page)
+#define SIZE_OF_BLOCK_HEADER 		sizeof(t_block)
+#define MIN_NUM_OF_BLOCKS_PER_PAGE 	100
+#define SIZE_OF_BLOCK_BODY(page_zone) ((page_zone) == TINY ? BLOCK_SIZE_TINY : BLOCK_SIZE_SMALL)
+
 
 enum page_zone
 {
