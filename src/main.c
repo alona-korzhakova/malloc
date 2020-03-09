@@ -6,15 +6,18 @@ int main()
 	char *addr;
 
 	i = 0;
-	while (i < 1)//1024)
+	while (i < 500)//1024)
 	{
-		if ((addr = (char *)s_malloc(1024)) == NULL) {
+		if ((addr = (char *)s_malloc(500)) == NULL) {
 			printf("Not ok...\n");
 			return (0);
 		}
-		addr[0] = 42;
+		
+		addr[1049] = 42;
+		//printf("OK, i: %d\n", i);
 		i++;
-		printf("it's ok\n");
+		//printf("it's ok\n");
 	}
+	check();
 	return (0);
 }
