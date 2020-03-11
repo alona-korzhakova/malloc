@@ -13,7 +13,7 @@ int main()
 			return (0);
 		}
 		
-		addr[1049] = 42;
+		addr[200] = 42;
 		//printf("OK, i: %d\n", i);
 		i++;
 		//printf("it's ok\n");

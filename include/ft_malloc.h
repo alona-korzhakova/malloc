@@ -41,24 +41,26 @@ typedef enum page_zone
 typedef struct 		s_block
 {
 	struct s_block	*next;
+	struct s_block	*prev;
 	size_t			size;
-	char			is_free;
+	int				is_free;
 }					t_block;
 
 typedef struct 		s_page
 {
 	struct s_page	*next;
-	struct s_block	*occupied_block;
-	struct s_block	*free_block;
+	struct s_page	*prev;
+	struct s_block	*first_occupied_block;
+	struct s_block	*first_free_block;
 	size_t			total_size;
 	size_t			occupied_size;
-	char			is_free;
+	int				is_free;
 } 					t_page;
 
 extern t_page			*g_page_zones[PAGE_ZONE_NUM];
 extern pthread_mutex_t	g_mutex_malloc;
 
-void	free(void *ptr);
+void	s_free(void *ptr);
 void	*s_malloc(size_t size);
 void	*s_realloc(void *ptr, size_t size);
 void	show_alloc_mem(void);
