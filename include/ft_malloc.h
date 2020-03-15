@@ -23,12 +23,16 @@
 #define PAGE_ZONE_NUM					3
 #define BLOCK_SIZE_TINY					128
 #define BLOCK_SIZE_SMALL				1024
-#define SIZE_OF_PAGE_HEADER 			sizeof(t_page)
-#define SIZE_OF_BLOCK_HEADER 			sizeof(t_block)
+#define ALIGNMENT						(sizeof(long double))
+#define SIZE_OF_PAGE_HEADER 			(sizeof(t_page))
+#define SIZE_OF_BLOCK_HEADER 			(sizeof(t_block))
+#define SIZE_OF_PAGE_METADATA			(SIZE_OF_PAGE_HEADER + (SIZE_OF_PAGE_HEADER % ALIGNMENT))
+#define SIZE_OF_BLOCK_METADATA			(SIZE_OF_BLOCK_HEADER + (SIZE_OF_BLOCK_HEADER % ALIGNMENT))
 #define INITIAL_NUM_OF_BLOCKS_PER_PAGE 	100
 #define SIZE_OF_BLOCK_BODY(page_zone) ((page_zone) == TINY ? BLOCK_SIZE_TINY : BLOCK_SIZE_SMALL)
-#define TRUE							0
-#define FALSE							1
+#define TRUE							1
+#define FALSE							0
+#define MIN(first, second)				((first) <= (second) ? (first) : (second))
 
 
 typedef enum page_zone
@@ -42,7 +46,8 @@ typedef struct 		s_block
 {
 	struct s_block	*next;
 	struct s_block	*prev;
-	size_t			size;
+	size_t 			total_size;
+	size_t			occupied_size;
 	int				is_free;
 }					t_block;
 
@@ -57,7 +62,7 @@ typedef struct 		s_page
 	int				is_free;
 } 					t_page;
 
-extern t_page			*g_page_zones[PAGE_ZONE_NUM];
+extern t_page			*g_zones_db[PAGE_ZONE_NUM];
 extern pthread_mutex_t	g_mutex_malloc;
 
 void	s_free(void *ptr);
