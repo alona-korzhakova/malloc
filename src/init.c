@@ -1,22 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memdel.c                                        :+:      :+:    :+:   */
+/*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akorzhak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/03 12:19:25 by akorzhak          #+#    #+#             */
-/*   Updated: 2017/11/03 12:33:43 by akorzhak         ###   ########.fr       */
+/*   Created: 2020/03/01 12:57:19 by akorzhak          #+#    #+#             */
+/*   Updated: 2020/03/01 12:57:20 by akorzhak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "ft_malloc.h"
 
-void	ft_memdel(void **ap)
+void new_page_init(t_page *new_page, size_t size)
 {
-	if (ap)
-	{
-		free(*ap);
-		*ap = NULL;
-	}
+	printf("NEW PAGE INIT\n");
+	new_page->next = NULL;
+	new_page->prev = NULL;
+	new_page->first_occupied_block = NULL;
+	new_page->total_size = size - SIZE_OF_PAGE_METADATA;
+	new_page->occupied_size = 0;
+	new_page->is_free = TRUE;
 }

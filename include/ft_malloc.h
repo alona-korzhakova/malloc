@@ -62,7 +62,7 @@ typedef struct 		s_page
 	int				is_free;
 } 					t_page;
 
-extern t_page			*g_zones_db[PAGE_ZONE_NUM];
+extern t_page			*g_malloc_db[PAGE_ZONE_NUM];
 extern pthread_mutex_t	g_mutex_malloc;
 
 void	s_free(void *ptr);
@@ -70,6 +70,16 @@ void	*s_malloc(size_t size);
 void	*s_realloc(void *ptr, size_t size);
 void	show_alloc_mem(void);
 void	show_alloc_mem_ex(void);
+
 void	check();
+e_zone 	get_page_zone_enum(size_t size);
+t_page 	*find_page_with_ptr(void *ptr, e_zone *page_zone);
+t_block *try_to_occupy_free_block(t_page *page, size_t size);
+void 	new_page_init(t_page *new_page, size_t size);
+void	free_block(t_page *page, void *ptr);
+void	free_large_page(t_page *page_to_free);
+t_page *create_new_page(e_zone page_zone, size_t requested_data_size);
+void	add_new_page_to_db(t_page *new_page, e_zone page_zone);
+t_block *create_new_block(t_page *page, size_t size);
 
 #endif

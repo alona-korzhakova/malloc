@@ -17,6 +17,8 @@
 # include <unistd.h>
 # include <string.h>
 
+# define BUFF_SIZE 10
+
 typedef struct		s_list
 {
 	void			*content;
@@ -91,5 +93,7 @@ char				*ft_itoa_base(int value, int base);
 char				**ft_split_white(char *str);
 void				ft_print_bits(unsigned char octet);
 unsigned char		ft_reverse_bits(unsigned char octet);
+
+int					get_next_line(const int fd, char **line);
 
 #endif

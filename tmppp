@@ -1,0 +1,193 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: akorzhak <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2018/01/13 18:35:56 by akorzhak          #+#    #+#              #
+#    Updated: 2018/01/13 18:35:58 by akorzhak         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+
+
+
+ifeq ($(HOSTTYPE),)
+	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
+endif
+
+NAME = libft_malloc_$(HOSTTYPE).so
+
+OBJSRC = ft_malloc.c ft_realloc.c ft_free.c ft_free_sup.c support_func.c show.c alloc.c print.c print_sup.c \
+		 ft_bzero.c ft_memcpy.c ft_memset.c ft_strlen.c log.c
+
+OBJC = $(OBJSRC:%.c=src/%.c)
+OBJO = $(OBJSRC:.c=.o)
+CFLAGS = -Wall -Werror -Wextra -g
+
+%.o: src/%.c
+	cc $(CFLAGS) -fPIC -c $< -pthread -I includes
+
+all: $(NAME)
+
+$(NAME): $(OBJO)
+	cc $(CFLAGS) -shared -fPIC -o $(NAME) $(OBJO) -I ../includes
+	ln -s $(NAME) libft_malloc.so
+
+clean:
+	rm -f $(OBJO)
+
+fclean: clean
+	rm -f $(NAME) libft_malloc.so
+
+re: fclean all`
+
+
+
+
+
+
+@make -C $(LIBDIR)
+	@cp $(LIB) $(NAME)
+	@ar rc $(NAME) $(OBJ)
+	@ranlib $(NAME)
+	@echo libftprintf.a has been successfully created :')'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+NAME = lem-in
+
+C = gcc
+
+CFLAG = -Wall -Wextra -Werror
+
+INC = -I ./includes -I ./ft_printf/includes
+
+PRINTF_DIR = ft_printf/
+
+PRINTF = $(PRINTF_DIR)libftprintf.a
+
+LIBS = -L ./ft_printf -lftprintf
+
+SRC_DIR = src/
+
+CONTROLLER_DIR = $(SRC_DIR)controller/
+
+MODEL_DIR = $(SRC_DIR)model/
+
+VIEW_DIR = $(SRC_DIR)view/
+
+PARSING_DIR = $(MODEL_DIR)parsing/
+
+MAIN_DIR = $(MODEL_DIR)main/
+
+UTIL_DIR = $(MODEL_DIR)util/
+
+FREE_DIR = $(MODEL_DIR)free/
+
+ROOMS_DIR = $(PARSING_DIR)rooms/
+
+OBJ_DIR = obj/
+
+SRC = main.c init.c get_rooms.c ants.c\
+	form_adj_list.c record_name.c args.c\
+	links.c save_input.c validation.c\
+	move_ants.c prepare_way.c set_capacity.c\
+	set_levels.c set_links.c set_ways.c\
+	sort.c colors.c dict.c formats.c\
+	math.c free.c free_lem.c free_links.c\
+	free_rooms.c free_turns.c free_ways.c\
+	all_steps.c messages.c result.c	  
+
+OBJ = $(SRC:.c=.o)
+
+# Colors constants
+include Colors.mk
+
+.PHONY: all clean fclean
+
+%.o: $(CONTROLLER_DIR)%.c
+	@$(C) $(CFLAG) -c $< $(INC)
+
+%.o: $(MODEL_DIR)%.c
+	@$(C) $(CFLAG) -c $< $(INC)
+
+%.o: $(VIEW_DIR)%.c
+	@$(C) $(CFLAG) -c $< $(INC)
+
+%.o: $(PARSING_DIR)%.c
+	@$(C) $(CFLAG) -c $< $(INC)
+
+%.o: $(MAIN_DIR)%.c
+	@$(C) $(CFLAG) -c $< $(INC)
+
+%.o: $(UTIL_DIR)%.c
+	@$(C) $(CFLAG) -c $< $(INC)
+
+%.o: $(FREE_DIR)%.c
+	@$(C) $(CFLAG) -c $< $(INC)
+
+%.o: $(ROOMS_DIR)%.c
+	@$(C) $(CFLAG) -c $< $(INC)
+
+all: $(NAME)
+
+$(NAME): $(OBJ)
+	@make -C $(PRINTF_DIR)
+	@$(C) $(CFLAG) -o $(NAME) $(OBJ) $(LIBS)
+	@echo "$(GREEN)$(NAME) compilation is done$(RESET)"
+	@echo "$(BLUE)usage:$(RESET) ./lem-in [-e] [-a] < map"
+	@echo "flags:"
+	@echo "$(BLUE)-e$(RESET) error detection"
+	@echo "$(BLUE)-a$(RESET) show all steps"
+
+clean:
+	@make clean -C $(PRINTF_DIR)
+	@/bin/rm -f $(OBJ) *~
+	@echo "$(YELLOW)object files have been cleaned$(RESET)"
+
+fclean: clean
+	@make fclean -C $(PRINTF_DIR)
+	@/bin/rm -f $(NAME)
+	@echo "$(RED)$(NAME) has been removed$(RESET)"
+
+re: fclean all

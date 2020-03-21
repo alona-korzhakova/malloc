@@ -18,45 +18,46 @@ NAME = libft_malloc_$(HOSTTYPE).so
 
 C = gcc
 
-CFLAG = -Wall -Wextra -Werror
+CFLAG = -Wall -Wextra -Werror -fPIC
 
-LIBDIR = libft
+INC = -I ./include -I ./ft_printf/includes
 
-LIB = $(LIBDIR)/libft.a
+PRINTF_DIR = ft_printf/
 
-SRCDIR = src
+PRINTF_LIB = $(PRINTF_DIR)libftprintf.a
 
-SRC = malloc.c
+SRCDIR = src/
 
-IDIR = include
-
-INC = $(IDIR)/libftprintf.h
+SRC = create_new_item.c free.c main.c occupy_free_block.c util.c\
+	  find_ptr_in_db.c   init.c  malloc.c  realloc.c
 
 OBJ = $(SRC:.c=.o)
 
+# Colors constants
+include Colors.mk
+
 .PHONY: all clean fclean
 
-%.o: $(SRCDIR)/%.c
-	@$(C) -c $<
+%.o: $(SRCDIR)%.c
+	@$(C) $(CFLAG) -c $< -pthread $(INC)
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@make -C $(LIBDIR)
-	@cp $(LIB) $(NAME)
-#	@ar rc $(NAME) $(OBJ)
-    @ln -s $(NAME) libft_malloc.so
-#	@ranlib $(NAME)
+	@make -C $(PRINTF_DIR)
+	$(C) $(CFLAGS) -shared -o $(NAME) $(OBJ) $(INC) -Wl,--whole-archive $(PRINTF_LIB) -Wl,--no-whole-archive
+
+	@ln -s $(NAME) libft_malloc.so
 	@echo libft_malloc.so has been successfully created :')'
 
 clean:
-	@make clean -C $(LIBDIR)
+	@make clean -C $(PRINTF_DIR)
 	@/bin/rm -f $(OBJ) *~
 	@echo object files have been removed
 
 fclean: clean
-	@make fclean -C $(LIBDIR)
+	@make fclean -C $(PRINTF_DIR)
 	@/bin/rm -f $(NAME)
-	@echo libftprintf.a has been removed :'('
+	@echo libft_malloc.so has been removed :'('
 
 re: fclean all

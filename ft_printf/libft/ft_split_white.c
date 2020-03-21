@@ -41,8 +41,8 @@ static char		**fill(char *str, char **arr)
 		arr[a++][b] = '\0';
 		b = 0;
 	}
-	arr[a] = (char*)malloc(sizeof(char));
-	arr[a][b] = '\0';
+	arr[a] = (char *)malloc(sizeof(char));
+	arr[a] = NULL;
 	return (arr);
 }
 
@@ -71,8 +71,8 @@ char			**ft_split_white(char *str)
 
 	if (str)
 	{
-		arr = (char**)malloc(sizeof(char*) * (word_count(str)));
+		arr = (char **)malloc(sizeof(char*) * (word_count(str)));
 		return (fill(str, arr));
 	}
-	return (0);
+	return (NULL);
 }
