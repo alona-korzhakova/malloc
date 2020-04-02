@@ -19,6 +19,8 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>
+#include "libftprintf.h"
+#include "libft.h"
 
 #define PAGE_ZONE_NUM					3
 #define BLOCK_SIZE_TINY					128
@@ -33,6 +35,16 @@
 #define TRUE							1
 #define FALSE							0
 #define MIN(first, second)				((first) <= (second) ? (first) : (second))
+
+#define STR_BLANK_WORD "00000000"
+#define WORD_SIZE (sizeof(unsigned))
+#define NUM_OF_PRINTED_SYMBOLS_PER_BYTE 2
+#define NUM_OF_PRINTED_SYMBOLS_PER_WORD (WORD_SIZE * NUM_OF_PRINTED_SYMBOLS_PER_BYTE)
+#define STR_TINY_EMPTY "Tiny zone is not allocated."
+#define STR_SMALL_EMPTY "Small zone is not allocated."
+#define STR_PAGE_NO "Page No "
+#define STR_BLOCK_NO "Block No "
+#define STR_IS_EMPTY " is empty"
 
 
 typedef enum page_zone
@@ -68,8 +80,13 @@ extern pthread_mutex_t	g_mutex_malloc;
 void	s_free(void *ptr);
 void	*s_malloc(size_t size);
 void	*s_realloc(void *ptr, size_t size);
+void 	*s_calloc(size_t nmemb, size_t size);
 void	show_alloc_mem(void);
 void	show_alloc_mem_ex(void);
+
+void	*malloc_internal(size_t size);
+void	*realloc_internal(void *ptr, size_t size);
+void	free_internal(void *ptr);
 
 void	check();
 e_zone 	get_page_zone_enum(size_t size);

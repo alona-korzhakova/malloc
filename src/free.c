@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free.c                                          :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: akorzhak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -73,7 +73,7 @@ void	free_large_page(t_page *page_to_free)
 	munmap(page_to_free, (page_to_free->total_size + SIZE_OF_PAGE_METADATA));
 }
 
-void		ft_free(void *ptr)
+void		free_internal(void *ptr)
 {
 	printf("FT_FREE\n");
 	e_zone 	page_zone;
@@ -94,6 +94,6 @@ void	s_free(void *ptr)
 {
 	printf("S_FREE\n");
 	pthread_mutex_lock(&g_mutex_malloc);
-	ft_free(ptr);
+	free_internal(ptr);
 	pthread_mutex_unlock(&g_mutex_malloc);
 }

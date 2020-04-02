@@ -62,13 +62,13 @@ int			ft_min(t_flags *p, char *nb, char **f, int a)
 {
 	t_cnt	*c;
 	char	*n;
-	size_t	len;
+	int		len;
 	int		i;
 
 	c = (t_cnt *)ft_memalloc(sizeof(t_cnt));
 	c->a = a;
 	n = ft_handlecases(p, nb, c);
-	len = ft_strlen(n);
+	len = (int)ft_strlen(n);
 	c->p = len;
 	if (p->wd && p->wd > len && p->wd > p->prc)
 		ft_handlecase(p, n, f, c);

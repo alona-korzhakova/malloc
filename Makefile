@@ -20,44 +20,40 @@ C = gcc
 
 CFLAG = -Wall -Wextra -Werror -fPIC
 
-INC = -I ./include -I ./ft_printf/includes
+INC = -I ./include -I ./ft_printf/includes -I ./ft_printf/libft
 
-PRINTF_DIR = ft_printf/
+LIB_DIR = ft_printf/
 
-PRINTF_LIB = $(PRINTF_DIR)libftprintf.a
+LIB = $(LIB_DIR)libftprintf.a
 
 SRCDIR = src/
 
-SRC = create_new_item.c free.c main.c occupy_free_block.c util.c\
-	  find_ptr_in_db.c   init.c  malloc.c  realloc.c
+PATH_OBJ = obj/
 
-OBJ = $(SRC:.c=.o)
+SRC = create_new_item.c free.c occupy_free_block.c util.c\
+	  find_ptr_in_db.c  init.c malloc.c realloc.c calloc.c
+
+OBJ = $(patsubst %.c, $(PATH_OBJ)%.o, $(SRC))
 
 # Colors constants
 include Colors.mk
 
 .PHONY: all clean fclean
 
-%.o: $(SRCDIR)%.c
-	@$(C) $(CFLAG) -c $< -pthread $(INC)
+$(PATH_OBJ)%.o: $(addprefix $(SRCDIR),%.c)
+	mkdir -p $(PATH_OBJ)
+	$(C) $(CFLAG) -c -o $@ $^ -pthread $(INC)
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@make -C $(PRINTF_DIR)
-	$(C) $(CFLAGS) -shared -o $(NAME) $(OBJ) $(INC) -Wl,--whole-archive $(PRINTF_LIB) -Wl,--no-whole-archive
-
-	@ln -s $(NAME) libft_malloc.so
-	@echo libft_malloc.so has been successfully created :')'
-
+	make -C $(LIB_DIR)
+	$(C) $(CFLAGS) -shared -o $(NAME) $(OBJ) $(INC) -Wl,--whole-archive $(LIB) -Wl,--no-whole-archive
+	ln -s $(NAME) libft_malloc.so
 clean:
-	@make clean -C $(PRINTF_DIR)
-	@/bin/rm -f $(OBJ) *~
-	@echo object files have been removed
-
+	make clean -C $(LIB_DIR)
+	rm -f $(OBJ)
 fclean: clean
-	@make fclean -C $(PRINTF_DIR)
-	@/bin/rm -f $(NAME)
-	@echo libft_malloc.so has been removed :'('
-
+	make fclean -C $(LIB_DIR)
+	rm -f $(NAME) libft_malloc.so
 re: fclean all

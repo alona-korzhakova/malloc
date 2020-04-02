@@ -18,7 +18,7 @@
 # include <stdint.h>
 # include <locale.h>
 
-# define ABS(Value) ((Value) < 0) ? (-Value) : (Value)
+# define ABS(Value) (((Value) < 0) ? (-Value) : (Value))
 
 typedef struct		s_flags
 {

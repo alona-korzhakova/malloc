@@ -90,7 +90,7 @@ static void		ft_fillarr(t_flags *ptr, unsigned int *arr, char *res)
 		(*arr < 2048) ? (c = ft_unicode_short(*arr, &t)) : 0;
 		(*arr >= 2048) ? (c = ft_unicode_wide(*arr, &t)) : 0;
 		arr++;
-		if (ptr->prc && ft_strlen(res) > ptr->prc)
+		if (ptr->prc && (int)ft_strlen(res) > ptr->prc)
 		{
 			while (c--)
 				*t-- = '\0';

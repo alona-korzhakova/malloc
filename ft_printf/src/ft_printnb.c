@@ -123,7 +123,7 @@ int		ft_printnb(t_flags *p, char **f, va_list arg)
 		nb = ft_get_snb(p, f, arg);
 	if (p->dot && !p->prc && *nb == '0')
 		return (ft_handledot(p, f));
-	((size_t)p->prc < ft_strlen(nb) && p->dot) ? (p->zero = 0) : 0;
+	(p->prc < (int)ft_strlen(nb) && p->dot) ? (p->zero = 0) : 0;
 	if (**f == 'p' || (ft_strchr("oOxX", **f) && p->sharp && *nb != '0'))
 		ft_handlepref(p, f, &nb, c);
 	i = ft_printnb_2(p, f, &nb, c);

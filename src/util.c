@@ -18,7 +18,7 @@ void check()
 	t_page *page;
 	t_block *block;
 
-	if ((page = g_malloc_db[2]) == NULL) {
+	if ((page = g_malloc_db[SMALL]) == NULL) {
 		printf("Your pointers doesn't work for pages\n");
 		return;
 	}

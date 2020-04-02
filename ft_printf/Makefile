@@ -35,7 +35,7 @@ OBJ = $(SRC:.c=.o)
 .PHONY: all clean fclean
 
 %.o: $(SRCDIR)/%.c
-	@$(C) $(CFLAG) -c $<
+	@$(C) $(CFLAG) $(INC) -c $< 
 
 all: $(NAME)
 

@@ -12,7 +12,7 @@
 
 #include "../includes/libftprintf.h"
 
-int		ft_handlecase(t_flags *ptr, char *s, size_t len)
+int		ft_handlecase(t_flags *ptr, char *s, int len)
 {
 	int i;
 
@@ -40,7 +40,7 @@ int		ft_handlecase(t_flags *ptr, char *s, size_t len)
 int		ft_prints(t_flags *ptr, char **f, char *s)
 {
 	int		i;
-	size_t	len;
+	int	    len;
 
 	(s == NULL) ? s = "(null)" : 0;
 	if (ptr->dot && !ptr->prc && **f != '%')

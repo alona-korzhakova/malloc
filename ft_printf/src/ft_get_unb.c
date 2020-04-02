@@ -48,24 +48,36 @@ static char			*itoa_base(uintmax_t v, int base, char **f)
 	return (arr);
 }
 
-static char			*convert_to_char(t_flags *ptr, uintmax_t nb, char **f)
+static char			*convert_to_char(uintmax_t nb, char **f)
 {
+	char *str;
+	if (!nb) 
+	{
+		if (**f == 'x' || **f == 'X')
+		{
+			str = ft_strnew(2);
+			str[1] = '0';
+		}
+		else
+			str = ft_strnew(1);
+		str[0] = '0';
+		return (str);
+	}
 	if (**f == 'o' || **f == 'O')
-		return (itoa_base(ABS(nb), 8, f));
+		return (itoa_base(nb, 8, f));
 	else if (**f == 'u' || **f == 'U')
-		return (itoa_base(ABS(nb), 10, f));
+		return (itoa_base(nb, 10, f));
 	else if (**f == 'X')
-		return (itoa_base(ABS(nb), 16, f));
+		return (itoa_base(nb, 16, f));
 	else if (**f == 'x')
-		return (itoa_base(ABS(nb), 16, f));
+		return (itoa_base(nb, 16, f));
 	else
-		return (itoa_base(ABS(nb), 16, f));
+		return (itoa_base(nb, 16, f));
 }
 
 char				*ft_get_unb(t_flags *ptr, char **f, va_list arg)
 {
 	uintmax_t	nb;
-	char		*n;
 
 	if (ft_strchr("OU", **f))
 		nb = va_arg(arg, unsigned long);
@@ -84,9 +96,6 @@ char				*ft_get_unb(t_flags *ptr, char **f, va_list arg)
 	else if (ft_strchr("ouxX", **f))
 		nb = va_arg(arg, unsigned int);
 	else if (**f == 'p')
-		nb = va_arg(arg, uintmax_t);
-	(!nb) ? (n = ft_strnew(1)) : 0;
-	(!nb) ? (*n = '0') : 0;
-	(nb) ? (n = convert_to_char(ptr, nb, f)) : 0;
-	return (n);
+		nb = va_arg(arg, uintmax_t);	
+	return (convert_to_char(nb, f));
 }

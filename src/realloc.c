@@ -26,14 +26,14 @@ void	*realloc_block(t_page *page, e_zone old_page_zone, void *old_mem_ptr, size_
 	if ((new_page_zone == old_page_zone) &&
 		(new_size <= old_block->total_size)) ///size is default block size REDO //old_block->occupied_size
 	{
-		printf("REALLOC_LARGE_PAGE: NEW SIZE REQUESTED IS LESS THEN PREVIOUS, RETURNING THE SAME PTR\n");
+		printf("REALLOC_BLOCK: NEW SIZE REQUESTED IS LESS THEN PREVIOUS, RETURNING THE SAME PTR\n");
 		//split the rest?
 		old_block->occupied_size = new_size;
 		return (old_mem_ptr);
 	}
-	if ((new_mem_ptr = s_malloc(new_size)) == NULL)
+	if ((new_mem_ptr = malloc_internal(new_size)) == NULL)
 		return NULL;
-	memcpy(new_mem_ptr, old_mem_ptr, MIN(new_size, old_block->occupied_size));	//will copy with extra bytes, redo
+	ft_memcpy(new_mem_ptr, old_mem_ptr, MIN(new_size, old_block->occupied_size));	//will copy with extra bytes, redo
 	free_block(page, old_mem_ptr);
 	return (new_mem_ptr);
 }
@@ -60,7 +60,7 @@ void	*realloc_large_page(void *old_mem_ptr, size_t new_size)
 		}
 	}
 	printf("REALLOC_LARGE_PAGE: g_malloc_db[LARGE] before new_page creation is: %p\n", g_malloc_db[LARGE]);
-	if ((new_mem_ptr = s_malloc(new_size)) == NULL)
+	if ((new_mem_ptr = malloc_internal(new_size)) == NULL)
 		return NULL;
 	printf("REALLOC_LARGE_PAGE: g_malloc_db[LARGE] after new_page creation is: %p\n", g_malloc_db[LARGE]);
 	memcpy(new_mem_ptr, old_mem_ptr, MIN(new_size, old_page->occupied_size));
@@ -73,18 +73,18 @@ void	*realloc_large_page(void *old_mem_ptr, size_t new_size)
 	return (new_mem_ptr);
 }
 
-void	*m_realloc(void *ptr, size_t size)
+void	*realloc_internal(void *ptr, size_t size)
 {
 	printf("m_REALLOC\n");
 	e_zone 	page_zone;
 	t_page	*page;
 
 	if (!ptr)
-		return (s_malloc(size));
+		return (malloc_internal(size));
 	printf("size: %ld\n", size);
 	if (!size)
 	{
-		s_free(ptr);
+		free_internal(ptr);
 		return NULL;
 	}
 	page_zone = TINY;
@@ -105,7 +105,7 @@ void	*s_realloc(void *ptr, size_t size)
 	void *new_ptr;
 
 	pthread_mutex_lock(&g_mutex_malloc);
-	new_ptr = m_realloc(ptr, size);
+	new_ptr = realloc_internal(ptr, size);
 	pthread_mutex_unlock(&g_mutex_malloc);
 	return (new_ptr);
 }

@@ -17,7 +17,7 @@ static int			size_of_arr(uintmax_t val, int base)
 	int	len;
 
 	len = 1;
-	while (val >= base)
+	while (val >= (uintmax_t)base)
 	{
 		val /= base;
 		len++;

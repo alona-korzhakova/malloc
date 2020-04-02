@@ -15,9 +15,9 @@
 pthread_mutex_t g_mutex_malloc = PTHREAD_MUTEX_INITIALIZER;
 t_page			*g_malloc_db[PAGE_ZONE_NUM] = {NULL};
 
-void	*ft_malloc(size_t size)
+void	*malloc_internal(size_t size)
 {
-	printf("FT_MALLOC\n");
+	printf("MALLOC_internal\n");
 
 	t_page	*page;
 	t_block *new_block;
@@ -32,7 +32,7 @@ void	*ft_malloc(size_t size)
 			page = page->next;
 	}
 	if ((LARGE == page_zone) || !page) {
-		printf("FT_MALLOC: no free page found\n");
+		printf("MALLOC_internal: no free page found\n");
 		if ((page = create_new_page(page_zone, size)) == NULL)
 			return (NULL);
 		add_new_page_to_db(page, page_zone);
@@ -47,7 +47,7 @@ void	*ft_malloc(size_t size)
 										(SIZE_OF_BLOCK_METADATA + SIZE_OF_BLOCK_BODY(page_zone));
 	if (possible_next_block_ptr >= valid_start_of_last_block_ptr)
 	{
-		printf("FT_MALLOC: Page is not free now\n");
+		printf("MALLOC_internal: Page is not free now\n");
 		page->is_free = FALSE;
 	}
 	printf("return address new_block: %p\n", (void *)new_block);
@@ -62,7 +62,7 @@ void 	*s_malloc(size_t size)
 	void *new_ptr;
 
 	pthread_mutex_lock(&g_mutex_malloc);
-	new_ptr = ft_malloc(size);
+	new_ptr = malloc_internal(size);
 	pthread_mutex_unlock(&g_mutex_malloc);
 	return (new_ptr);
 }
