@@ -40,6 +40,8 @@
 #define WORD_SIZE (sizeof(unsigned))
 #define NUM_OF_PRINTED_SYMBOLS_PER_BYTE 2
 #define NUM_OF_PRINTED_SYMBOLS_PER_WORD (WORD_SIZE * NUM_OF_PRINTED_SYMBOLS_PER_BYTE)
+#define NUM_OF_BYTES_PER_CHUNK 2
+#define NUM_OF_CHUNKS_PER_LINE 8
 #define STR_TINY_EMPTY "Tiny zone is not allocated."
 #define STR_SMALL_EMPTY "Small zone is not allocated."
 #define STR_PAGE_NO "Page No "
