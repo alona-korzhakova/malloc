@@ -20,11 +20,11 @@ C = gcc
 
 CFLAG = -Wall -Wextra -Werror -fPIC
 
-INC = -I ./include -I ./ft_printf/includes -I ./ft_printf/libft
+INC = -I ./include -I ./libft
 
-LIB_DIR = ft_printf/
+LIB_DIR = libft/
 
-LIB = $(LIB_DIR)libftprintf.a
+LIB = $(LIB_DIR)libft.a
 
 SRCDIR = src/
 

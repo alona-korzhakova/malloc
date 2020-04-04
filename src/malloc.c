@@ -43,7 +43,7 @@ void	*malloc_internal(size_t size)
 		new_block = create_new_block(page, size);
 
 	void *possible_next_block_ptr       = (void *)new_block + SIZE_OF_BLOCK_METADATA + SIZE_OF_BLOCK_BODY(page_zone);
-	void *valid_start_of_last_block_ptr = (void *)page + SIZE_OF_PAGE_METADATA + page->total_size -
+	void *valid_start_of_last_block_ptr = (void *)page + SIZE_OF_PAGE_METADATA + page->reserved_size -
 										(SIZE_OF_BLOCK_METADATA + SIZE_OF_BLOCK_BODY(page_zone));
 	if (possible_next_block_ptr >= valid_start_of_last_block_ptr)
 	{

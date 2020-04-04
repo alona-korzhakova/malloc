@@ -17,7 +17,7 @@ t_block *find_matching_free_block_to_occupy(t_block *free_block, size_t size)
 	printf("find_matching_free_block_to_occupy\n");
 
 	while (free_block) {
-		if (free_block->total_size >= size) //free blocks should be sorted
+		if (free_block->reserved_size >= size) //free blocks should be sorted
 			return (free_block);
 		free_block = free_block->next;
 	}
@@ -43,7 +43,7 @@ t_block *try_to_occupy_free_block(t_page *page, size_t size) //TODO REDO
 	}
 	free_block_to_occupy->next = page->first_occupied_block;
 	free_block_to_occupy->prev = NULL;
-	free_block_to_occupy->occupied_size = size;
+	free_block_to_occupy->allocated_size = size;
 	page->first_occupied_block = free_block_to_occupy;
 	return (free_block_to_occupy);
 }

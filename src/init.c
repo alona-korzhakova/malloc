@@ -18,7 +18,7 @@ void new_page_init(t_page *new_page, size_t size)
 	new_page->next = NULL;
 	new_page->prev = NULL;
 	new_page->first_occupied_block = NULL;
-	new_page->total_size = size - SIZE_OF_PAGE_METADATA;
-	new_page->occupied_size = 0;
+	new_page->reserved_size = size - SIZE_OF_PAGE_METADATA;
+	new_page->allocated_size = 0;
 	new_page->is_free = TRUE;
 }

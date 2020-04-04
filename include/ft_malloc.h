@@ -19,7 +19,6 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>
-#include "libftprintf.h"
 #include "libft.h"
 
 #define PAGE_ZONE_NUM					3
@@ -60,8 +59,8 @@ typedef struct 		s_block
 {
 	struct s_block	*next;
 	struct s_block	*prev;
-	size_t 			total_size;
-	size_t			occupied_size;
+	size_t 			reserved_size;
+	size_t			allocated_size;
 	int				is_free;
 }					t_block;
 
@@ -71,8 +70,8 @@ typedef struct 		s_page
 	struct s_page	*prev;
 	struct s_block	*first_occupied_block;
 	struct s_block	*first_free_block;
-	size_t			total_size;
-	size_t			occupied_size;
+	size_t			reserved_size;
+	size_t			allocated_size;
 	int				is_free;
 } 					t_page;
 

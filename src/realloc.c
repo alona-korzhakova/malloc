@@ -20,20 +20,20 @@ void	*realloc_block(t_page *page, e_zone old_page_zone, void *old_mem_ptr, size_
 	void   *new_mem_ptr;
 
 	old_block = (t_block *)(old_mem_ptr - SIZE_OF_BLOCK_METADATA);
-	printf("old_block size: %ld\n", old_block->occupied_size);
+	printf("old_block size: %ld\n", old_block->allocated_size);
 	printf("new size: %ld\n", new_size);
 	new_page_zone = get_page_zone_enum(new_size);
 	if ((new_page_zone == old_page_zone) &&
-		(new_size <= old_block->total_size)) ///size is default block size REDO //old_block->occupied_size
+		(new_size <= old_block->reserved_size)) ///size is default block size REDO //old_block->allocated_size
 	{
 		printf("REALLOC_BLOCK: NEW SIZE REQUESTED IS LESS THEN PREVIOUS, RETURNING THE SAME PTR\n");
 		//split the rest?
-		old_block->occupied_size = new_size;
+		old_block->allocated_size = new_size;
 		return (old_mem_ptr);
 	}
 	if ((new_mem_ptr = malloc_internal(new_size)) == NULL)
 		return NULL;
-	ft_memcpy(new_mem_ptr, old_mem_ptr, MIN(new_size, old_block->occupied_size));	//will copy with extra bytes, redo
+	ft_memcpy(new_mem_ptr, old_mem_ptr, MIN(new_size, old_block->allocated_size));	//will copy with extra bytes, redo
 	free_block(page, old_mem_ptr);
 	return (new_mem_ptr);
 }
@@ -53,9 +53,9 @@ void	*realloc_large_page(void *old_mem_ptr, size_t new_size)
 	if (LARGE == page_zone_for_new_size) { //is there is a sense in substracting page header from total size?
 		aligned_new_size = (SIZE_OF_PAGE_METADATA + new_size) + getpagesize() -
 							(SIZE_OF_PAGE_METADATA + new_size) % getpagesize();
-		if (aligned_new_size == (old_page->total_size + SIZE_OF_PAGE_METADATA)) {
+		if (aligned_new_size == (old_page->reserved_size + SIZE_OF_PAGE_METADATA)) {
 			printf("REALLOC_LARGE_PAGE: NEW SIZE REQUESTED WILL GIVE SAME SIZE TO MALLOC, RETURNING THE SAME PTR\n");
-			old_page->occupied_size = new_size;
+			old_page->allocated_size = new_size;
 			return old_mem_ptr;
 		}
 	}
@@ -63,7 +63,7 @@ void	*realloc_large_page(void *old_mem_ptr, size_t new_size)
 	if ((new_mem_ptr = malloc_internal(new_size)) == NULL)
 		return NULL;
 	printf("REALLOC_LARGE_PAGE: g_malloc_db[LARGE] after new_page creation is: %p\n", g_malloc_db[LARGE]);
-	memcpy(new_mem_ptr, old_mem_ptr, MIN(new_size, old_page->occupied_size));
+	memcpy(new_mem_ptr, old_mem_ptr, MIN(new_size, old_page->allocated_size));
 	if (LARGE == page_zone_for_new_size)
 		printf("REALLOC_LARGE_PAGE: new_page address is: %p\n", new_mem_ptr - SIZE_OF_PAGE_METADATA);
 	else

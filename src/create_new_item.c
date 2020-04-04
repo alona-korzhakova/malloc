@@ -23,7 +23,7 @@ t_block *create_new_block(t_page *page, size_t size)
 		while (block && block->next) {
 			block = block->next;
 		}
-		new_block = (void *)block + SIZE_OF_BLOCK_METADATA + block->total_size;	
+		new_block = (void *)block + SIZE_OF_BLOCK_METADATA + block->reserved_size;	
 		block->next = new_block;
 		new_block->prev = block;
 	} else {
@@ -32,8 +32,8 @@ t_block *create_new_block(t_page *page, size_t size)
 		new_block->prev = NULL;
 	}
 	new_block->next = NULL;
-	new_block->occupied_size = size;
-	new_block->total_size = size + (size % ALIGNMENT);
+	new_block->allocated_size = size;
+	new_block->reserved_size = size + (size % ALIGNMENT);
 	return (new_block);
 }
 
@@ -70,7 +70,7 @@ t_page *create_new_page(e_zone page_zone, size_t requested_data_size)
 		return (NULL);
 	new_page_init(new_page, aligned_size);
 	if (LARGE == page_zone) {
-		new_page->occupied_size = requested_data_size;
+		new_page->allocated_size = requested_data_size;
 		new_page->is_free = FALSE;
 	}	
 	return (new_page);

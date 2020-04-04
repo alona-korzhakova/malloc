@@ -1,1 +1,1 @@
-gcc main.c -I include/ -I ft_printf/includes/ -I ft_printf/libft/ src/* -L ft_printf/ -l ftprintf
+gcc main.c -I include/ -I libft/ src/* -L libft/ -l ft

@@ -58,11 +58,11 @@ void	ft_hexdump(char *ptr, size_t size)
 char *page_zone_to_string(e_zone page_zone)
 {
 	if (TINY == page_zone)
-		return ("tiny");
+		return ("TINY");
 	if (SMALL == page_zone)
-		return ("small");
+		return ("SMALL");
 	if (LARGE == page_zone)
-		return ("large");
+		return ("LARGE");
 }
 
 void	show_info_on_tiny_small_pages(e_zone page_zone)
@@ -72,9 +72,13 @@ void	show_info_on_tiny_small_pages(e_zone page_zone)
 	int num_of_block;
 	int num_of_page;
 
-	//ft_printf("****** Info on zone: %s ******\n", page_zone_to_string(page_zone));
+	ft_putchar('\n');
+	ft_putstr("**************** Info on zone: ");
+	ft_putstr(page_zone_to_string(page_zone));
+	ft_putendl(" ****************");
+	ft_putchar('\n');
 	if ((page = g_malloc_db[page_zone]) == NULL) {
-		//ft_printf("Zone is not allocated\n");
+		ft_putendl("Zone is not allocated");
 		return;
 	}
 	num_of_page = 0;
@@ -83,17 +87,29 @@ void	show_info_on_tiny_small_pages(e_zone page_zone)
 		num_of_page++;
 		num_of_block = 0;
 		if ((block = page->first_occupied_block) == NULL) {
-			//ft_printf("Page #%d is empty\n", num_of_page);
+			ft_putstr("Page #");
+			ft_putnbr(num_of_page);
+			ft_putendl(" is empty");
 			continue;
 		}
 		while (block) {
 			num_of_block++;
-			//ft_printf("___________ Block #%d ___________\n", num_of_block);
-			//ft_printf("1. Total size:      %ld\n", block->total_size);
-			//ft_printf("2. Occupied size:   %ld\n", block->occupied_size);
-			//ft_printf("3. Hexdump:\n");	
-			ft_hexdump((void *)block + SIZE_OF_BLOCK_METADATA, block->occupied_size);
+			ft_putstr("_______________________Block #");
+			ft_putnbr(num_of_block);
+			ft_putendl("______________________");
+
+			ft_putstr("1. Reserved size:    ");
+			ft_putnbr(block->reserved_size);
+			ft_putchar('\n');
+
+			ft_putstr("2. Allocated size:   ");
+			ft_putnbr(block->allocated_size);
+			ft_putchar('\n');
+
+			ft_putendl("3. Hexdump:        ");	
+			ft_hexdump((void *)block + SIZE_OF_BLOCK_METADATA, block->allocated_size);
 			block = block->next;
+			ft_putchar('\n');
 		}
 		page = page->next;
 	}

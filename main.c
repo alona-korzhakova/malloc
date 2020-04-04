@@ -23,8 +23,26 @@ int main()
 		s_malloc(7000000);
 		s_malloc(7);
 
-
-		printf("MALLOC 0\n");
+		if ((addr = (char *)s_malloc(1)) == NULL) {
+			printf("Not ok...malloc\n");
+			return (0);
+		}
+		if ((addr = (char *)s_malloc(13)) == NULL) {
+			printf("Not ok...malloc\n");
+			return (0);
+		}
+		if ((addr = (char *)s_malloc(16)) == NULL) {
+			printf("Not ok...malloc\n");
+			return (0);
+		}
+		if ((addr = (char *)s_malloc(200)) == NULL) {
+			printf("Not ok...malloc\n");
+			return (0);
+		}
+		if ((addr = (char *)s_malloc(200)) == NULL) {
+			printf("Not ok...malloc\n");
+			return (0);
+		}
 		if ((addr = (char *)s_malloc(200)) == NULL) {
 			printf("Not ok...malloc\n");
 			return (0);
