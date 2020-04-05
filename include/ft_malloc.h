@@ -75,6 +75,12 @@ typedef struct 		s_page
 	int				is_free;
 } 					t_page;
 
+typedef struct 		s_num_alloc
+{
+	unsigned	    num_of_page;
+	unsigned        num_of_block;	
+}                   t_num_alloc;
+
 extern t_page			*g_malloc_db[PAGE_ZONE_NUM];
 extern pthread_mutex_t	g_mutex_malloc;
 

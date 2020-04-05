@@ -65,12 +65,12 @@ char *page_zone_to_string(e_zone page_zone)
 		return ("LARGE");
 }
 
-void	show_info_on_tiny_small_pages(e_zone page_zone)
+size_t show_info_on_tiny_small_pages(e_zone page_zone)
 {
 	t_page *page;
 	t_block *block;
-	int num_of_block;
-	int num_of_page;
+	t_num_alloc num_alloc = {0, 0};
+	size_t bytes;
 
 	ft_putchar('\n');
 	ft_putstr("**************** Info on zone: ");
@@ -79,23 +79,23 @@ void	show_info_on_tiny_small_pages(e_zone page_zone)
 	ft_putchar('\n');
 	if ((page = g_malloc_db[page_zone]) == NULL) {
 		ft_putendl("Zone is not allocated");
-		return;
+		return (bytes);
 	}
-	num_of_page = 0;
+	bytes = 0;
 	while (page)
 	{
-		num_of_page++;
-		num_of_block = 0;
+		num_alloc.num_of_page++;
+		num_alloc.num_of_block = 0;
 		if ((block = page->first_occupied_block) == NULL) {
 			ft_putstr("Page #");
-			ft_putnbr(num_of_page);
+			ft_putnbr(num_alloc.num_of_page);
 			ft_putendl(" is empty");
 			continue;
 		}
 		while (block) {
-			num_of_block++;
+			num_alloc.num_of_block++;
 			ft_putstr("_______________________Block #");
-			ft_putnbr(num_of_block);
+			ft_putnbr(num_alloc.num_of_block);
 			ft_putendl("______________________");
 
 			ft_putstr("1. Reserved size:    ");
@@ -108,23 +108,36 @@ void	show_info_on_tiny_small_pages(e_zone page_zone)
 
 			ft_putendl("3. Hexdump:        ");	
 			ft_hexdump((void *)block + SIZE_OF_BLOCK_METADATA, block->allocated_size);
+			bytes += block->allocated_size;
 			block = block->next;
 			ft_putchar('\n');
 		}
 		page = page->next;
 	}
+	return (bytes);
 }
 
 void	show_alloc_mem(void)
 {
+	size_t bytes_tiny;
+	size_t bytes_small;
+
 	ft_putendl("========== Allocated memory dump ==========");
 //	size_t allocated_memory_size;
 
 //	allocated_memory_size = 0;
 	pthread_mutex_lock(&g_mutex_malloc);
-	//allocated_memory_size += 
-	show_info_on_tiny_small_pages(TINY);
-	show_info_on_tiny_small_pages(SMALL);
+
+	bytes_tiny = show_info_on_tiny_small_pages(TINY);
+	bytes_small = show_info_on_tiny_small_pages(SMALL);
+
+	ft_putstr("Num of allocated bytes in TINY:   ");
+	ft_putnbr(bytes_tiny);
+	ft_putchar('\n');
+	
+	ft_putstr("Num of allocated bytes in SMALL:   ");
+	ft_putnbr(bytes_small);
+	ft_putchar('\n');
 	//allocated_memory_size +=
 //	show_info_on_large_pages();
 	//allocated_memory_size += show_info_on_large_pages();
