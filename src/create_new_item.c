@@ -33,7 +33,9 @@ t_block *create_new_block(t_page *page, size_t size)
 	}
 	new_block->next = NULL;
 	new_block->allocated_size = size;
-	new_block->reserved_size = size + (size % ALIGNMENT);
+	new_block->reserved_size = size;
+	if (size % ALIGNMENT)
+		new_block->reserved_size = size + ALIGNMENT - (size % ALIGNMENT);
 	return (new_block);
 }
 
@@ -64,7 +66,9 @@ t_page *create_new_page(e_zone page_zone, size_t requested_data_size)
 		row_size = SIZE_OF_PAGE_METADATA + (SIZE_OF_BLOCK_METADATA +
 					SIZE_OF_BLOCK_BODY(page_zone)) * INITIAL_NUM_OF_BLOCKS_PER_PAGE;
 	}
-	aligned_size = row_size + getpagesize() - row_size % getpagesize();
+	aligned_size = row_size;
+	if (row_size % getpagesize())
+		aligned_size = row_size + getpagesize() - row_size % getpagesize();
 	new_page = (t_page*)mmap(0, aligned_size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
 	if (MAP_FAILED == new_page)
 		return (NULL);

@@ -94,19 +94,22 @@ size_t show_info_on_tiny_small_pages(e_zone page_zone)
 		}
 		while (block) {
 			num_alloc.num_of_block++;
-			ft_putstr("_______________________Block #");
+			ft_putstr("__________________Block #");
 			ft_putnbr(num_alloc.num_of_block);
-			ft_putendl("______________________");
-
-			ft_putstr("1. Reserved size:    ");
-			ft_putnbr(block->reserved_size);
+			ft_putstr(", Page #");
+			ft_putnbr(num_alloc.num_of_page);
+			ft_putendl("_________________");
 			ft_putchar('\n');
 
-			ft_putstr("2. Allocated size:   ");
+			ft_putstr("1. Allocated size:             ");
 			ft_putnbr(block->allocated_size);
 			ft_putchar('\n');
 
-			ft_putendl("3. Hexdump:        ");	
+			ft_putstr("2. Allocated + Reserved size:  ");
+			ft_putnbr(block->reserved_size);
+			ft_putchar('\n');
+
+			ft_putendl("3. Hexdump:");	
 			ft_hexdump((void *)block + SIZE_OF_BLOCK_METADATA, block->allocated_size);
 			bytes += block->allocated_size;
 			block = block->next;
