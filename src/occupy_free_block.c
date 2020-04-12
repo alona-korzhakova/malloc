@@ -17,7 +17,7 @@ t_block *find_matching_free_block_to_occupy(t_block *free_block, size_t size)
 	printf("find_matching_free_block_to_occupy\n");
 
 	while (free_block) {
-		if (free_block->reserved_size >= size) //free blocks should be sorted
+		if (free_block->total_size >= size) //free blocks should be sorted
 			return (free_block);
 		free_block = free_block->next;
 	}

@@ -15,7 +15,7 @@
 void	insert_block_to_asc_sorted_free_block_db(t_block *block_to_free, t_block *free_block)
 {
 	while (free_block->next) {
-		if (free_block->reserved_size >= block_to_free->reserved_size) {
+		if (free_block->total_size >= block_to_free->total_size) {
 			block_to_free->next = free_block;
 			block_to_free->prev = free_block->prev;
 			free_block->prev = block_to_free;
@@ -70,7 +70,7 @@ void	free_large_page(t_page *page_to_free)
 		page_to_free->prev->next = page_to_free->next;
 	if (page_to_free->next)
 		page_to_free->next->prev = page_to_free->prev;
-	munmap(page_to_free, (page_to_free->reserved_size + SIZE_OF_PAGE_METADATA));
+	munmap(page_to_free, (page_to_free->total_size + SIZE_OF_PAGE_METADATA));
 }
 
 void		free_internal(void *ptr)

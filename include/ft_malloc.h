@@ -59,7 +59,7 @@ typedef struct 		s_block
 {
 	struct s_block	*next;
 	struct s_block	*prev;
-	size_t 			reserved_size;
+	size_t 			total_size;
 	size_t			allocated_size;
 	int				is_free;
 }					t_block;
@@ -70,7 +70,7 @@ typedef struct 		s_page
 	struct s_page	*prev;
 	struct s_block	*first_occupied_block;
 	struct s_block	*first_free_block;
-	size_t			reserved_size;
+	size_t			total_size;
 	size_t			allocated_size;
 	int				is_free;
 } 					t_page;
@@ -88,8 +88,7 @@ void	s_free(void *ptr);
 void	*s_malloc(size_t size);
 void	*s_realloc(void *ptr, size_t size);
 void 	*s_calloc(size_t nmemb, size_t size);
-void	show_alloc_mem(void);
-void	show_alloc_mem_ex(void);
+void	show_alloc_mem(int show_hexdump);
 
 void	*malloc_internal(size_t size);
 void	*realloc_internal(void *ptr, size_t size);

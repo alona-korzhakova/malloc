@@ -15,7 +15,6 @@
 void	print_address(long long addr)
 {
 	int len;
-	int start_ix;
 
 	len = sizeof(long long) * NUM_OF_PRINTED_SYMBOLS_PER_BYTE + 1;
 	char arr[len];	
@@ -27,12 +26,11 @@ void	print_address(long long addr)
 		addr /= 16;
 	}
 	ft_putstr(&arr[++len]);
-	ft_putstr(": ");
 }
 
 void	ft_hexdump(char *ptr, size_t size)
 {
-	int byte_ix;
+	size_t byte_ix;
 
 	byte_ix = 0;
 	while (byte_ix < size) {
@@ -40,6 +38,7 @@ void	ft_hexdump(char *ptr, size_t size)
 		{
 			ft_putchar('\n');
 			print_address((long long)(&ptr[byte_ix]));
+			ft_putstr(": ");
 		}	
 		else if (!(byte_ix % NUM_OF_BYTES_PER_CHUNK))
 			ft_putchar(' ');
@@ -55,33 +54,77 @@ void	ft_hexdump(char *ptr, size_t size)
 		ft_putchar('\n');
 }
 
-char *page_zone_to_string(e_zone page_zone)
+void show_info_on_page(t_page *page, int num_of_page, int show_hexdump)
 {
-	if (TINY == page_zone)
-		return ("TINY");
-	if (SMALL == page_zone)
-		return ("SMALL");
-	if (LARGE == page_zone)
-		return ("LARGE");
+	ft_putstr("\n__________________Allocation: ");
+	print_address((long long)((void *)page + SIZE_OF_PAGE_METADATA));
+	ft_putstr(", Page #");
+	ft_putnbr(num_of_page);
+	ft_putendl("_________________\n");
+	ft_putstr("1. Allocated size:             ");
+	ft_putnbr(page->allocated_size);
+	ft_putchar('\n');
+	ft_putstr("2. Allocated + Reserved size:  ");
+	ft_putnbr(page->total_size);
+	ft_putchar('\n');
+	if (show_hexdump)
+	{ 
+		ft_putendl("3. Hexdump:");	
+		ft_hexdump((void *)page + SIZE_OF_PAGE_METADATA, page->allocated_size);
+	}
 }
 
-size_t show_info_on_tiny_small_pages(e_zone page_zone)
+size_t show_info_on_large_zone(int show_hexdump)
 {
 	t_page *page;
-	t_block *block;
-	t_num_alloc num_alloc = {0, 0};
-	size_t bytes;
+	size_t num_of_page = 0;
+	size_t bytes = 0;
+	
+	if ((page = g_malloc_db[LARGE]) == NULL) {
+		ft_putendl("Zone is not allocated");
+		return (bytes);
+	}
+	while (page)
+	{
+		num_of_page++;
+		show_info_on_page(page, num_of_page, show_hexdump);
+		bytes += page->allocated_size;
+		page = page->next;
+	}
+	return (bytes);
+}
 
+void show_info_on_block(t_block *block, int num_of_page, int show_hexdump)
+{
+	ft_putstr("\n__________________Allocation: ");
+	print_address((long long)((void *)block + SIZE_OF_BLOCK_METADATA));
+	ft_putstr(", Page #");
+	ft_putnbr(num_of_page);
+	ft_putendl("_________________\n");
+	ft_putstr("1. Allocated size:             ");
+	ft_putnbr(block->allocated_size);
 	ft_putchar('\n');
-	ft_putstr("**************** Info on zone: ");
-	ft_putstr(page_zone_to_string(page_zone));
-	ft_putendl(" ****************");
+	ft_putstr("2. Allocated + Reserved size:  ");
+	ft_putnbr(block->total_size);
 	ft_putchar('\n');
+	if (show_hexdump)
+	{ 
+		ft_putendl("3. Hexdump:");	
+		ft_hexdump((void *)block + SIZE_OF_BLOCK_METADATA, block->allocated_size);
+	}
+}
+
+size_t show_info_on_tiny_small_zones(e_zone page_zone, int show_hexdump)
+{
+	t_page *page;
+	t_num_alloc num_alloc = {0, 0};
+	t_block *block;
+	size_t bytes = 0;
+	
 	if ((page = g_malloc_db[page_zone]) == NULL) {
 		ft_putendl("Zone is not allocated");
 		return (bytes);
 	}
-	bytes = 0;
 	while (page)
 	{
 		num_alloc.num_of_page++;
@@ -94,55 +137,37 @@ size_t show_info_on_tiny_small_pages(e_zone page_zone)
 		}
 		while (block) {
 			num_alloc.num_of_block++;
-			ft_putstr("__________________Block #");
-			ft_putnbr(num_alloc.num_of_block);
-			ft_putstr(", Page #");
-			ft_putnbr(num_alloc.num_of_page);
-			ft_putendl("_________________");
-			ft_putchar('\n');
-
-			ft_putstr("1. Allocated size:             ");
-			ft_putnbr(block->allocated_size);
-			ft_putchar('\n');
-
-			ft_putstr("2. Allocated + Reserved size:  ");
-			ft_putnbr(block->reserved_size);
-			ft_putchar('\n');
-
-			ft_putendl("3. Hexdump:");	
-			ft_hexdump((void *)block + SIZE_OF_BLOCK_METADATA, block->allocated_size);
+			show_info_on_block(block, num_alloc.num_of_page, show_hexdump);
 			bytes += block->allocated_size;
 			block = block->next;
-			ft_putchar('\n');
 		}
 		page = page->next;
 	}
 	return (bytes);
 }
 
-void	show_alloc_mem(void)
+void	show_alloc_mem(int show_hexdump)
 {
 	size_t bytes_tiny;
 	size_t bytes_small;
+	size_t bytes_large;	
 
-	ft_putendl("========== Allocated memory dump ==========");
-//	size_t allocated_memory_size;
-
-//	allocated_memory_size = 0;
 	pthread_mutex_lock(&g_mutex_malloc);
-
-	bytes_tiny = show_info_on_tiny_small_pages(TINY);
-	bytes_small = show_info_on_tiny_small_pages(SMALL);
-
-	ft_putstr("Num of allocated bytes in TINY:   ");
+	ft_putendl("================ Allocated memory dump ================");
+	ft_putendl("\n****************** Info on zone: TINY *******************\n");
+	bytes_tiny = show_info_on_tiny_small_zones(TINY, show_hexdump);
+	ft_putendl("\n****************** Info on zone: SMALL ******************\n");
+	bytes_small = show_info_on_tiny_small_zones(SMALL, show_hexdump);
+	ft_putendl("\n****************** Info on zone: LARGE ******************\n");
+	bytes_large = show_info_on_large_zone(show_hexdump);
+	ft_putstr("\nNum of allocated bytes in TINY:   ");
 	ft_putnbr(bytes_tiny);
-	ft_putchar('\n');
-	
+	ft_putchar('\n');	
 	ft_putstr("Num of allocated bytes in SMALL:   ");
 	ft_putnbr(bytes_small);
 	ft_putchar('\n');
-	//allocated_memory_size +=
-//	show_info_on_large_pages();
-	//allocated_memory_size += show_info_on_large_pages();
+	ft_putstr("Num of allocated bytes in LARGE:   ");
+	ft_putnbr(bytes_large);
+	ft_putchar('\n');
 	pthread_mutex_unlock(&g_mutex_malloc);
 }

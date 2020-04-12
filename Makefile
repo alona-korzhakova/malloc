@@ -31,7 +31,7 @@ SRCDIR = src/
 PATH_OBJ = obj/
 
 SRC = create_new_item.c free.c occupy_free_block.c util.c\
-	  find_ptr_in_db.c  init.c malloc.c realloc.c calloc.c
+	  find_ptr_in_db.c  init.c malloc.c realloc.c calloc.c show_alloc_memory.c\
 
 OBJ = $(patsubst %.c, $(PATH_OBJ)%.o, $(SRC))
 
@@ -49,10 +49,10 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	make -C $(LIB_DIR)
 	$(C) $(CFLAGS) -shared -o $(NAME) $(OBJ) $(INC) -Wl,--whole-archive $(LIB) -Wl,--no-whole-archive
-	ln -s $(NAME) libft_malloc.so
+	ln -sf $(NAME) libft_malloc.so
 clean:
 	make clean -C $(LIB_DIR)
-	rm -f $(OBJ)
+	rm -rf $(PATH_OBJ)
 fclean: clean
 	make fclean -C $(LIB_DIR)
 	rm -f $(NAME) libft_malloc.so

@@ -23,7 +23,7 @@ t_block *create_new_block(t_page *page, size_t size)
 		while (block && block->next) {
 			block = block->next;
 		}
-		new_block = (void *)block + SIZE_OF_BLOCK_METADATA + block->reserved_size;	
+		new_block = (void *)block + SIZE_OF_BLOCK_METADATA + block->total_size;	
 		block->next = new_block;
 		new_block->prev = block;
 	} else {
@@ -33,9 +33,9 @@ t_block *create_new_block(t_page *page, size_t size)
 	}
 	new_block->next = NULL;
 	new_block->allocated_size = size;
-	new_block->reserved_size = size;
+	new_block->total_size = size;
 	if (size % ALIGNMENT)
-		new_block->reserved_size = size + ALIGNMENT - (size % ALIGNMENT);
+		new_block->total_size = size + ALIGNMENT - (size % ALIGNMENT);
 	return (new_block);
 }
 

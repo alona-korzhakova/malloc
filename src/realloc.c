@@ -24,7 +24,7 @@ void	*realloc_block(t_page *page, e_zone old_page_zone, void *old_mem_ptr, size_
 	printf("new size: %ld\n", new_size);
 	new_page_zone = get_page_zone_enum(new_size);
 	if ((new_page_zone == old_page_zone) &&
-		(new_size <= old_block->reserved_size)) ///size is default block size REDO //old_block->allocated_size
+		(new_size <= old_block->total_size)) ///size is default block size REDO //old_block->allocated_size
 	{
 		printf("REALLOC_BLOCK: NEW SIZE REQUESTED IS LESS THEN PREVIOUS, RETURNING THE SAME PTR\n");
 		//split the rest?
@@ -53,7 +53,7 @@ void	*realloc_large_page(void *old_mem_ptr, size_t new_size)
 	if (LARGE == page_zone_for_new_size) { //is there is a sense in substracting page header from total size?
 		aligned_new_size = (SIZE_OF_PAGE_METADATA + new_size) + getpagesize() -
 							(SIZE_OF_PAGE_METADATA + new_size) % getpagesize();
-		if (aligned_new_size == (old_page->reserved_size + SIZE_OF_PAGE_METADATA)) {
+		if (aligned_new_size == (old_page->total_size + SIZE_OF_PAGE_METADATA)) {
 			printf("REALLOC_LARGE_PAGE: NEW SIZE REQUESTED WILL GIVE SAME SIZE TO MALLOC, RETURNING THE SAME PTR\n");
 			old_page->allocated_size = new_size;
 			return old_mem_ptr;

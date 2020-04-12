@@ -20,7 +20,7 @@ int main()
 	while (i < 1)//1024)
 	{
 		s_calloc(500, sizeof(t_block));
-		s_malloc(7000000);
+		s_malloc(40000);
 		s_malloc(7);
 
 		if ((addr = (char *)s_malloc(1)) == NULL) {
@@ -55,7 +55,7 @@ int main()
 		addr[5] = '+';
 		addr[20] = 'b';
 		addr[198] = 'c';
-		show_alloc_mem();		
+		show_alloc_mem(0);		
 		// //addr[1998] = 42;
 		// printf("REALLOC 0\n");
 		// if ((addr = (char *)s_malloc(600)) == NULL) {
