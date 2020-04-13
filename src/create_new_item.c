@@ -19,7 +19,7 @@ t_block *create_new_block(t_page *page, size_t size)
 	t_block *block;
 
 	block = page->first_occupied_block;
-	if (block) {  ///add to the 1st pos
+	if (block) {
 		while (block && block->next) {
 			block = block->next;
 		}

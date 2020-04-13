@@ -24,7 +24,7 @@ t_block *find_matching_free_block_to_occupy(t_block *free_block, size_t size)
 	return (NULL);
 }
 
-t_block *try_to_occupy_free_block(t_page *page, size_t size) //TODO REDO
+t_block *try_to_occupy_free_block(t_page *page, size_t size)
 {
 	printf("TRY_TO_OCCUPY_FREE_BLOCK\n");
 	t_block *free_block_to_occupy;
@@ -37,7 +37,7 @@ t_block *try_to_occupy_free_block(t_page *page, size_t size) //TODO REDO
 	if (page->first_occupied_block)
 		page->first_occupied_block->prev = free_block_to_occupy;
 	if (page->first_free_block == free_block_to_occupy) {
-		page->first_free_block = free_block_to_occupy->next;  //WRONG, what if free block is in the middle?
+		page->first_free_block = free_block_to_occupy->next;
 		if (page->first_free_block)
 			page->first_free_block->prev = NULL;
 	}

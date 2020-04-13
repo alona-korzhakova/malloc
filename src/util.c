@@ -12,34 +12,6 @@
 
 #include "ft_malloc.h"
 
-void check()
-{
-//	printf("I'm in check()\n");
-	t_page *page;
-	t_block *block;
-
-	if ((page = g_malloc_db[SMALL]) == NULL) {
-		printf("Your pointers doesn't work for pages\n");
-		return;
-	}
-	while (page)
-	{
-		int i = 0;
-		printf("Page allocated\n");
-	//	printf("Page is free: %d\n", page->is_free);
-		block = page->first_occupied_block;
-
-		while (block) {
-			
-		//	printf("Block is free: %d\n", block->is_free);
-			block = block->next;
-			i++;
-		}
-		printf("num of blocks allocated, no: %d\n", i);
-		page = page->next;
-	}
-}
-
 e_zone get_page_zone_enum(size_t size)
 {
 	if (BLOCK_SIZE_TINY >= size)

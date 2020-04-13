@@ -24,16 +24,15 @@ void	*realloc_block(t_page *page, e_zone old_page_zone, void *old_mem_ptr, size_
 	printf("new size: %ld\n", new_size);
 	new_page_zone = get_page_zone_enum(new_size);
 	if ((new_page_zone == old_page_zone) &&
-		(new_size <= old_block->total_size)) ///size is default block size REDO //old_block->allocated_size
+		(new_size <= old_block->total_size))
 	{
 		printf("REALLOC_BLOCK: NEW SIZE REQUESTED IS LESS THEN PREVIOUS, RETURNING THE SAME PTR\n");
-		//split the rest?
 		old_block->allocated_size = new_size;
 		return (old_mem_ptr);
 	}
 	if ((new_mem_ptr = malloc_internal(new_size)) == NULL)
 		return NULL;
-	ft_memcpy(new_mem_ptr, old_mem_ptr, MIN(new_size, old_block->allocated_size));	//will copy with extra bytes, redo
+	ft_memcpy(new_mem_ptr, old_mem_ptr, MIN(new_size, old_block->allocated_size));
 	free_block(page, old_mem_ptr);
 	return (new_mem_ptr);
 }
@@ -50,7 +49,7 @@ void	*realloc_large_page(void *old_mem_ptr, size_t new_size)
 	old_page = (t_page *)(old_mem_ptr - SIZE_OF_PAGE_METADATA);
 	page_zone_for_new_size = get_page_zone_enum(new_size);
 
-	if (LARGE == page_zone_for_new_size) { //is there is a sense in substracting page header from total size?
+	if (LARGE == page_zone_for_new_size) {
 		aligned_new_size = (SIZE_OF_PAGE_METADATA + new_size) + getpagesize() -
 							(SIZE_OF_PAGE_METADATA + new_size) % getpagesize();
 		if (aligned_new_size == (old_page->total_size + SIZE_OF_PAGE_METADATA)) {

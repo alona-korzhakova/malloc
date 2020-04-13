@@ -18,7 +18,7 @@ t_page	*find_page_with_block(void *ptr, e_zone page_zone)
 	t_block *block;
 	t_block *block_to_find;
 
-	if ((page = g_malloc_db[page_zone]) == NULL)///do i need page_zone???
+	if ((page = g_malloc_db[page_zone]) == NULL)
 		return (NULL);
 	block_to_find = (t_block *)(ptr - SIZE_OF_BLOCK_METADATA);
 	printf("Address of page start: %p\n", (void *)page + SIZE_OF_PAGE_METADATA);
